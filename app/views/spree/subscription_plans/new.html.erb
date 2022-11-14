@@ -10,21 +10,21 @@
 
           <div id="plan_<%= @plan.id %>_subscribe">
             <div class="field form-group" data-hook="card_number">
-              <%= label_tag "card_number", Spree.t(:card_number) %><span class="required">*</span><br />
-              <% options_hash = Rails.env.production? ? {:autocomplete => 'off'} : {} %>
+              <%= label_tag "card_number", Spree.t(:card_number) %><span class="required">*</span><br/>
+              <% options_hash = Rails.env.production? ? { :autocomplete => 'off' } : {} %>
               <%= text_field_tag "card_number", '', options_hash.merge(:id => 'card_number', :class => 'required cardNumber form-control', :size => 19, :maxlength => 19, :autocomplete => "off") %>
               <span id="card_type" style="display:none;" class="text-danger">
-                ( <span id="looks_like" ><%= Spree.t(:card_type_is) %> <span id="type"></span></span>
+                ( <span id="looks_like"><%= Spree.t(:card_type_is) %> <span id="type"></span></span>
                   <span id="unrecognized"><%= Spree.t(:unrecognized_card_type) %></span>
                 )
               </span>
             </div>
             <div class="field form-group" data-hook="card_expiration">
-              <%= label_tag "card_expiry", Spree.t(:expiration) %><span class="required">*</span><br />
+              <%= label_tag "card_expiry", Spree.t(:expiration) %><span class="required">*</span><br/>
               <%= text_field_tag "card_expiry", '', :id => 'card_expiry', :class => "required cardExpiry form-control", :placeholder => "MM / YY" %>
             </div>
             <div class="field form-group" data-hook="card_code">
-              <%= label_tag "card_code", Spree.t(:card_code) %><span class="required">*</span><br />
+              <%= label_tag "card_code", Spree.t(:card_code) %><span class="required">*</span><br/>
               <div class="row">
                 <div class="col-xs-6">
                   <%= text_field_tag "card_code", '', options_hash.merge(:id => 'card_code', :class => 'required cardCode form-control', :size => 5) %>
@@ -37,13 +37,23 @@
           </div>
           <hr>
           <%= f.submit Spree.t(:subscribe), class: 'continue btn btn-success btn-lg btn-block' %>
-          <script>Spree.disableSaveOnClick();</script>
+          <script type="text/javascript" defer>
+              document.addEventListener('DOMContentLoaded', function () {
+                  Spree.disableSaveOnClick();
+              });
+          </script>
         <% end %>
       </div>
     </div>
   </div>
 </div>
+
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript">Stripe.setPublishableKey("<%= @plan.provider.preferred_public_key %>");</script>
-<script>Spree.stripePaymentMethod = $('#plan_' + <%= @plan.id %> + '_subscribe')</script>
+<script type="text/javascript" defer>Stripe.setPublishableKey("<%= @plan.provider.preferred_public_key %>");</script>
+<script type="text/javascript" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+        Spree.stripePaymentMethod = $('#plan_' + <%= @plan.id %> +'_subscribe');
+    });
+</script>
+
 <%= javascript_include_tag "spree/frontend/stripe" %>
